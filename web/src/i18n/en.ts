@@ -25,7 +25,7 @@ export const en: Messages = {
   home: {
     title: 'Search',
     description: 'Find Turkmen meanings in Persian and English — fast, free, and clear.',
-    trustLine: '11,003 headwords · free for education',
+    trustLine: '14,755 headwords · free for education',
     searchPlaceholder: 'Type Turkmen, Persian, or English…',
     searchHint: 'Search runs instantly across the full dictionary.',
     loading: 'Preparing the index…',
