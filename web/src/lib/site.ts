@@ -7,6 +7,7 @@ export const SITE = {
   descriptionEn:
     'Turkmen–Persian–English dictionary with fast search and alphabetical browse. Free for education.',
   aytronic: 'https://aytronic.com/',
-  github: 'https://github.com/kakajan',
+  githubRepo: 'https://github.com/kakajan/topragh',
+  githubIssues: 'https://github.com/kakajan/topragh/issues/new/choose',
   githubOrg: 'https://github.com/aytronic',
 } as const;

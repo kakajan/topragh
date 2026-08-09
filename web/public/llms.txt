@@ -4,7 +4,8 @@
 Site: https://topragh.ir
 Default UI language: Persian (fa). English UI: https://topragh.ir/en/
 Built by: Aytronic (https://aytronic.com/)
-Maintainer / contribute: https://github.com/kakajan
+Repository: https://github.com/kakajan/topragh
+Report an issue: https://github.com/kakajan/topragh/issues/new/choose
 
 ## Scope
 - ~15k Turkmen headwords with English glosses (Peace Corps Turkmen–English Dictionary, 1996–1999)
