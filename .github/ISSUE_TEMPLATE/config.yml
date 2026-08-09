@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: General questions
+    url: https://github.com/kakajan/topragh/discussions
+    about: Use Discussions for ideas and general questions.

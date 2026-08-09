@@ -1,0 +1,23 @@
+---
+import BrowseApp from '../../../components/BrowseApp.vue';
+import { getMessages } from '../../../i18n';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const locale = 'en' as const;
+const t = getMessages(locale);
+---
+
+<BaseLayout locale={locale} title={t.browse.title} description={t.browse.description} canonicalPath="/en/browse/">
+  <section class="page-hero">
+    <h1>{t.browse.title}</h1>
+    <p>{t.browse.description}</p>
+  </section>
+  <div class="page-panel">
+    <BrowseApp
+      client:load
+      locale={locale}
+      loadingLabel={t.browse.loading}
+      emptyLabel={t.browse.empty}
+    />
+  </div>
+</BaseLayout>

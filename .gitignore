@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Local source material and intermediate extraction files
+*.pdf
+data/raw/
+data/canonical/fa_cache.json
+dict*.txt
+dict*.html
+dictionary_raw.txt
+Turkmen_English_Dictionary*.md
+turkmen_*dict*.json
+Turkmen_english_dict.txt
+JSON_USAGE_GUIDE.md
+
+# Historical one-off extraction experiments (the maintained pipeline is in scripts/)
+/build_json.py
+/create_json.py
+/extract_clean.py
+/extract_pdf.py
+/fix_json.py
+/parse_dictionary.py
+/parse_dictionary_accurate.py
+/parse_dictionary_final.py
+/parse_dictionary_v2.py
+/parse_final.py
+/thorough_fix.py
+
+# Separate experimental Astro starter, not part of Topragh
+/awesome-azimuth/
+
+# Frontend dependencies and generated output
+web/node_modules/
+web/.astro/
+web/dist/
+web/public/data/
+web/public/sitemap-*.xml
+
+# Local deployment configuration
+web/deploy/.deploy.env
+
+# Editor and OS files
+.DS_Store
+.idea/
+.vscode/

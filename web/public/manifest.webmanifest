@@ -1,0 +1,19 @@
+{
+  "name": "Topragh — توپراق",
+  "short_name": "Topragh",
+  "description": "Turkmen–Persian–English dictionary",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F6F2",
+  "theme_color": "#2F6F5E",
+  "lang": "fa",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

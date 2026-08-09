@@ -1,0 +1,134 @@
+---
+import { getMessages, localePath } from '../../i18n';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { loadCanonicalEntries } from '../../lib/loadEntries';
+import type { DictEntry } from '../../lib/types';
+
+export function getStaticPaths() {
+  const entries = loadCanonicalEntries();
+  return entries.map((entry) => ({
+    params: { id: entry.id },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: DictEntry;
+}
+
+const { entry } = Astro.props as Props;
+const locale = 'fa' as const;
+const t = getMessages(locale);
+const title = `${entry.tk} — معنی فارسی و انگلیسی`;
+const description = [entry.fa, entry.en].filter(Boolean).join(' — ').slice(0, 160);
+
+const termLd = {
+  '@context': 'https://schema.org',
+  '@type': 'DefinedTerm',
+  name: entry.tk,
+  description: description,
+  inDefinedTermSet: 'https://topragh.ir/#dictionary',
+  url: `https://topragh.ir/w/${encodeURIComponent(entry.id)}/`,
+};
+---
+
+<BaseLayout
+  locale={locale}
+  title={title}
+  description={description}
+  canonicalPath={`/w/${entry.id}/`}
+  ogType="article"
+  jsonLd={termLd}
+>
+  <article class="entry">
+    <p class="crumbs">
+      <a href={localePath(locale, '')}>{t.entry.back}</a>
+      {' · '}
+      <a href={localePath(locale, 'browse')}>{t.nav.browse}</a>
+    </p>
+    <h1 dir="ltr" lang="tk">{entry.tk}</h1>
+    {
+      entry.fa && (
+        <p class="gloss gloss--fa" dir="rtl" lang="fa">
+          {entry.fa}
+        </p>
+      )
+    }
+    <p class="gloss gloss--en" dir="ltr" lang="en">{entry.en}</p>
+    {
+      entry.fa_status === 'mt_draft' && (
+        <p class="draft-note">{t.entry.draftNote}</p>
+      )
+    }
+    <h2>{t.entry.senses}</h2>
+    <ol class="senses">
+      {
+        entry.senses.map((s) => (
+          <li>
+            {s.fa && (
+              <div dir="rtl" lang="fa">
+                {s.fa}
+              </div>
+            )}
+            <div dir="ltr" lang="en">
+              {s.en}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+    {
+      entry.tags?.length > 0 && (
+        <p class="tags" dir="ltr">
+          {entry.tags.join(' · ')}
+        </p>
+      )
+    }
+  </article>
+</BaseLayout>
+
+<style>
+  .entry {
+    max-width: 42rem;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .crumbs {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+  }
+  h1 {
+    margin: 0;
+    font-family: var(--font-en);
+    font-size: clamp(2rem, 4vw, 2.6rem);
+    color: var(--color-brand-deep);
+  }
+  .gloss {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+  .gloss--en {
+    color: var(--color-text-muted);
+    font-family: var(--font-en);
+  }
+  .draft-note {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+  h2 {
+    margin: 0.75rem 0 0;
+    font-size: 1.1rem;
+  }
+  .senses {
+    margin: 0;
+    padding-inline-start: 1.25rem;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .tags {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+</style>

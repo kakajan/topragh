@@ -1,0 +1,68 @@
+---
+import { getMessages, localePath } from '../../i18n';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const locale = 'en' as const;
+const t = getMessages(locale);
+const firstSection = t.about.sections[0]!;
+const secondSection = t.about.sections[1]!;
+const fourthSection = t.about.sections[3]!;
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: firstSection.heading,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: firstSection.body,
+      },
+    },
+    {
+      '@type': 'Question',
+      name: secondSection.heading,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: secondSection.body,
+      },
+    },
+    {
+      '@type': 'Question',
+      name: fourthSection.heading,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: fourthSection.body,
+      },
+    },
+  ],
+};
+---
+
+<BaseLayout
+  locale={locale}
+  title={t.about.title}
+  description={t.about.description}
+  canonicalPath="/en/about/"
+  jsonLd={faqLd}
+>
+  <article class="page-hero">
+    <h1>{t.about.title}</h1>
+    <p class="page-lead">{t.about.lead}</p>
+  </article>
+  <div class="prose-panel">
+    {
+      t.about.sections.map((section) => (
+        <section class="prose-section">
+          <h2>{section.heading}</h2>
+          <p>{section.body}</p>
+        </section>
+      ))
+    }
+    <p class="contribute-inline">
+      <a href={localePath(locale, 'contribute')}>{t.about.contributeLink}</a>
+    </p>
+    <p class="license-note">{t.about.license}</p>
+  </div>
+</BaseLayout>

@@ -1,0 +1,25 @@
+name: Dictionary correction
+description: Suggest a correction or addition to a dictionary entry.
+title: "[Dictionary]: "
+labels: [data correction]
+body:
+  - type: input
+    id: headword
+    attributes:
+      label: Turkmen headword
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: Suggested correction
+      description: Include the current and proposed meanings, spelling, or tags.
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Source or evidence
+      description: Link or cite a reliable source. Do not upload restricted PDFs.
+    validations:
+      required: true

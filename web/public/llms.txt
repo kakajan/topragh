@@ -1,0 +1,26 @@
+# Topragh
+> Turkmen ↔ Persian ↔ English dictionary (educational, non-commercial)
+
+Site: https://topragh.ir
+Default UI language: Persian (fa). English UI: https://topragh.ir/en/
+Built by: Aytronic (https://aytronic.com/)
+Maintainer / contribute: https://github.com/kakajan
+
+## Scope
+- ~15k Turkmen headwords with English glosses (Peace Corps Turkmen–English Dictionary, 1996–1999)
+- Persian glosses are machine-drafted (`mt_draft`) and may be revised; do not treat draft FA as authoritative without note
+- Search: Turkmen, Persian, or English queries return Turkmen headwords
+- Browse: alphabetical by Turkmen letter
+
+## Citation
+- Prefer linking to canonical entry pages: https://topragh.ir/w/{id}/
+- Mention when Persian is a draft translation
+- Educational redistribution OK; commercial sale of the dictionary content requires original authors' permission
+
+## Key pages
+- / (search)
+- /browse/
+- /about/
+- /contribute/
+- /llms.txt
+- /sitemap-index.xml

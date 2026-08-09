@@ -1,0 +1,28 @@
+---
+import SearchApp from '../components/SearchApp.vue';
+import { getMessages } from '../i18n';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const locale = 'fa' as const;
+const t = getMessages(locale);
+---
+
+<BaseLayout locale={locale} title={t.home.title} description={t.home.description} canonicalPath="/">
+  <section class="home-hero">
+    <h1 class="home-hero__brand">{t.brand}</h1>
+    <p class="home-hero__lead">{t.home.description}</p>
+    <p class="home-hero__trust">{t.home.trustLine}</p>
+  </section>
+  <div class="search-shell">
+    <SearchApp
+      client:load
+      locale={locale}
+      placeholder={t.home.searchPlaceholder}
+      hintLabel={t.home.searchHint}
+      emptyLabel={t.home.empty}
+      loadingLabel={t.home.loading}
+      draftLabel={t.home.draft}
+      bothLabel={t.home.both}
+    />
+  </div>
+</BaseLayout>

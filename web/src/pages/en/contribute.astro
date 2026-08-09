@@ -1,0 +1,38 @@
+---
+import { getMessages } from '../../i18n';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE } from '../../lib/site';
+
+const locale = 'en' as const;
+const t = getMessages(locale);
+---
+
+<BaseLayout
+  locale={locale}
+  title={t.contribute.title}
+  description={t.contribute.description}
+  canonicalPath="/en/contribute/"
+>
+  <article class="page-hero">
+    <h1>{t.contribute.title}</h1>
+    <p class="page-lead">{t.contribute.lead}</p>
+  </article>
+  <div class="prose-panel">
+    <ul class="ways-list">
+      {
+        t.contribute.ways.map((way) => (
+          <li>
+            <h2>{way.title}</h2>
+            <p>{way.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="cta-block">
+      <p>
+        <a class="cta" href={SITE.github} target="_blank" rel="noopener noreferrer">{t.contribute.cta}</a>
+      </p>
+      <p class="cta-note">{t.contribute.ctaNote}</p>
+    </div>
+  </div>
+</BaseLayout>

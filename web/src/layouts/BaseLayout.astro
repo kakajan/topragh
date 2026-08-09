@@ -1,0 +1,181 @@
+---
+import ThemeToggle from '../components/ThemeToggle.vue';
+import { getMessages, localePath, switchLocalePath, type Locale } from '../i18n';
+import { SITE } from '../lib/site';
+import '../styles/global.css';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description?: string;
+  canonicalPath?: string;
+  ogType?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const {
+  locale,
+  title,
+  description,
+  canonicalPath = Astro.url.pathname,
+  ogType = 'website',
+  jsonLd,
+} = Astro.props;
+
+const t = getMessages(locale);
+const desc = description ?? (locale === 'fa' ? SITE.descriptionFa : SITE.descriptionEn);
+const canonical = new URL(canonicalPath, SITE.url).toString();
+const altLocale = locale === 'fa' ? 'en' : 'fa';
+const altPath = switchLocalePath(locale, Astro.url.pathname);
+const altUrl = new URL(altPath, SITE.url).toString();
+const pageTitle = `${title} | ${locale === 'fa' ? SITE.nameFa : SITE.nameEn}`;
+
+const orgLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Aytronic',
+  url: SITE.aytronic,
+  sameAs: [SITE.githubOrg, SITE.github],
+};
+
+const websiteLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: locale === 'fa' ? SITE.nameFa : SITE.nameEn,
+  url: SITE.url,
+  inLanguage: [locale === 'fa' ? 'fa-IR' : 'en'],
+  publisher: { '@type': 'Organization', name: 'Aytronic', url: SITE.aytronic },
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${SITE.url}/?q={search_term_string}`,
+    'query-input': 'required name=search_term_string',
+  },
+};
+
+const schemas = [orgLd, websiteLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [])];
+
+const nav = [
+  { href: localePath(locale, ''), label: t.nav.search, key: 'search' },
+  { href: localePath(locale, 'browse'), label: t.nav.browse, key: 'browse' },
+  { href: localePath(locale, 'about'), label: t.nav.about, key: 'about' },
+  { href: localePath(locale, 'contribute'), label: t.nav.contribute, key: 'contribute' },
+];
+
+function isCurrent(href: string, key: string) {
+  const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+  const h = href.replace(/\/$/, '') || '/';
+  // Search is the locale root (`/` or `/en`); prefix match would mark every page active.
+  if (key === 'search') return path === h;
+  return path === h || path.startsWith(h + '/');
+}
+---
+
+<!doctype html>
+<html lang={locale === 'fa' ? 'fa' : 'en'} dir={t.dir} data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={desc} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={locale === 'fa' ? 'fa' : 'en'} href={canonical} />
+    <link rel="alternate" hreflang={altLocale} href={altUrl} />
+    <link rel="alternate" hreflang="x-default" href={new URL('/', SITE.url).toString()} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="Topragh" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={locale === 'fa' ? 'fa_IR' : 'en_US'} />
+    <meta property="og:image" content={new URL('/og.png', SITE.url).toString()} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={desc} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#2B6A58" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    {
+      schemas.map((s) => (
+        <script is:inline type="application/ld+json" set:html={JSON.stringify(s)} />
+      ))
+    }
+    <script is:inline>
+      (() => {
+        try {
+          const stored = localStorage.getItem('topragh-theme');
+          const theme =
+            stored === 'dark' || stored === 'light'
+              ? stored
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (_) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    </script>
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="site-header__inner">
+          <a class="brand" href={localePath(locale, '')}>
+            <span class="brand__name">{t.brand}</span>
+            <span class="brand__tag">{t.tagline}</span>
+          </a>
+          <nav class="site-nav" aria-label="main">
+            {
+              nav.map((item) => (
+                <a href={item.href} aria-current={isCurrent(item.href, item.key) ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              ))
+            }
+          </nav>
+          <div class="header-actions">
+            <a class="lang-switch" href={altPath} hreflang={altLocale}>
+              {locale === 'fa' ? t.langSwitch.en : t.langSwitch.fa}
+            </a>
+            <ThemeToggle
+              client:load
+              label={t.theme.toggle}
+              lightLabel={t.theme.light}
+              darkLabel={t.theme.dark}
+            />
+          </div>
+        </div>
+      </header>
+
+      <main class="site-main">
+        <slot />
+      </main>
+
+      <footer class="site-footer">
+        <div class="site-footer__inner">
+          <p>
+            {t.footer.developedBy}
+            {' '}
+            <a href={SITE.aytronic} rel="noopener noreferrer" target="_blank">{t.footer.aytronic}</a>
+          </p>
+          <div class="site-footer__links">
+            <a href={localePath(locale, 'about')}>{t.nav.about}</a>
+            <a href={localePath(locale, 'contribute')}>{t.nav.contribute}</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
