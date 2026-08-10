@@ -2075,21 +2075,6 @@
     "tags": []
   },
   {
-    "id": "agri",
-    "tk": "agri",
-    "letter": "a",
-    "en": "oba hojalygy",
-    "fa": null,
-    "fa_status": "missing",
-    "senses": [
-      {
-        "en": "oba hojalygy",
-        "fa": null
-      }
-    ],
-    "tags": []
-  },
-  {
     "id": "agsak",
     "tk": "agsak",
     "letter": "a",
@@ -5800,21 +5785,6 @@
     "tags": []
   },
   {
-    "id": "and",
-    "tk": "and",
-    "letter": "a",
-    "en": "we",
-    "fa": null,
-    "fa_status": "missing",
-    "senses": [
-      {
-        "en": "we",
-        "fa": null
-      }
-    ],
-    "tags": []
-  },
-  {
     "id": "angliýa",
     "tk": "Angliýa",
     "letter": "a",
@@ -6630,6 +6600,21 @@
     "senses": [
       {
         "en": "frost",
+        "fa": null
+      }
+    ],
+    "tags": []
+  },
+  {
+    "id": "ap-ak",
+    "tk": "ap-ak",
+    "letter": "a",
+    "en": "whitest",
+    "fa": null,
+    "fa_status": "missing",
+    "senses": [
+      {
+        "en": "whitest",
         "fa": null
       }
     ],
@@ -28868,21 +28853,6 @@
     "senses": [
       {
         "en": "top",
-        "fa": null
-      }
-    ],
-    "tags": []
-  },
-  {
-    "id": "capita",
-    "tk": "capita",
-    "letter": "c",
-    "en": "kapitalist",
-    "fa": null,
-    "fa_status": "missing",
-    "senses": [
-      {
-        "en": "kapitalist",
         "fa": null
       }
     ],
@@ -90097,6 +90067,21 @@
     "tags": []
   },
   {
+    "id": "gyp-gyzyl",
+    "tk": "gyp-gyzyl",
+    "letter": "g",
+    "en": "reddest",
+    "fa": null,
+    "fa_status": "missing",
+    "senses": [
+      {
+        "en": "reddest",
+        "fa": null
+      }
+    ],
+    "tags": []
+  },
+  {
     "id": "gypjyndyrmak",
     "tk": "gypjyndyrmak",
     "letter": "g",
@@ -113771,21 +113756,6 @@
     "tags": []
   },
   {
-    "id": "kapita",
-    "tk": "kapita",
-    "letter": "k",
-    "en": "capitalist",
-    "fa": null,
-    "fa_status": "missing",
-    "senses": [
-      {
-        "en": "capitalist",
-        "fa": null
-      }
-    ],
-    "tags": []
-  },
-  {
     "id": "kapitalistik",
     "tk": "kapitalistik",
     "letter": "k",
@@ -125242,21 +125212,6 @@
     "senses": [
       {
         "en": "pazyl",
-        "fa": null
-      }
-    ],
-    "tags": []
-  },
-  {
-    "id": "lastest",
-    "tk": "lastest",
-    "letter": "l",
-    "en": "ter",
-    "fa": null,
-    "fa_status": "missing",
-    "senses": [
-      {
-        "en": "ter",
         "fa": null
       }
     ],
@@ -137091,21 +137046,6 @@
     "senses": [
       {
         "en": "1. pumping station",
-        "fa": null
-      }
-    ],
-    "tags": []
-  },
-  {
-    "id": "natura",
-    "tk": "natura",
-    "letter": "n",
-    "en": "naturalist",
-    "fa": null,
-    "fa_status": "missing",
-    "senses": [
-      {
-        "en": "naturalist",
         "fa": null
       }
     ],
@@ -162544,21 +162484,6 @@
     "tags": []
   },
   {
-    "id": "reddest",
-    "tk": "reddest",
-    "letter": "r",
-    "en": "gyp-gyzyl",
-    "fa": null,
-    "fa_status": "missing",
-    "senses": [
-      {
-        "en": "gyp-gyzyl",
-        "fa": null
-      }
-    ],
-    "tags": []
-  },
-  {
     "id": "rediska",
     "tk": "rediska",
     "letter": "r",
@@ -167249,6 +167174,21 @@
     "senses": [
       {
         "en": "cunning 2.",
+        "fa": null
+      }
+    ],
+    "tags": []
+  },
+  {
+    "id": "sap-sary",
+    "tk": "sap sary",
+    "letter": "s",
+    "en": "yellowest",
+    "fa": null,
+    "fa_status": "missing",
+    "senses": [
+      {
+        "en": "yellowest",
         "fa": null
       }
     ],
@@ -175511,21 +175451,6 @@
     "tags": [
       "russian_loanword"
     ]
-  },
-  {
-    "id": "specia",
-    "tk": "specia",
-    "letter": "s",
-    "en": "spesalist",
-    "fa": null,
-    "fa_status": "missing",
-    "senses": [
-      {
-        "en": "spesalist",
-        "fa": null
-      }
-    ],
-    "tags": []
   },
   {
     "id": "spectile",
@@ -207161,21 +207086,6 @@
     "tags": []
   },
   {
-    "id": "whi",
-    "tk": "whi",
-    "letter": "w",
-    "en": "ap-ak",
-    "fa": null,
-    "fa_status": "missing",
-    "senses": [
-      {
-        "en": "ap-ak",
-        "fa": null
-      }
-    ],
-    "tags": []
-  },
-  {
     "id": "whichş",
     "tk": "whichş",
     "letter": "w",
@@ -207230,21 +207140,6 @@
     "senses": [
       {
         "en": "aklamak",
-        "fa": null
-      }
-    ],
-    "tags": []
-  },
-  {
-    "id": "whitest",
-    "tk": "whitest",
-    "letter": "w",
-    "en": "ap-ak",
-    "fa": null,
-    "fa_status": "missing",
-    "senses": [
-      {
-        "en": "ap-ak",
         "fa": null
       }
     ],
@@ -208086,36 +207981,6 @@
     "senses": [
       {
         "en": "economist",
-        "fa": null
-      }
-    ],
-    "tags": []
-  },
-  {
-    "id": "yello",
-    "tk": "yello",
-    "letter": "y",
-    "en": "sap sary",
-    "fa": null,
-    "fa_status": "missing",
-    "senses": [
-      {
-        "en": "sap sary",
-        "fa": null
-      }
-    ],
-    "tags": []
-  },
-  {
-    "id": "yellowest",
-    "tk": "yellowest",
-    "letter": "y",
-    "en": "sap sary",
-    "fa": null,
-    "fa_status": "missing",
-    "senses": [
-      {
-        "en": "sap sary",
         "fa": null
       }
     ],
@@ -209726,21 +209591,6 @@
     "senses": [
       {
         "en": "gatyk",
-        "fa": null
-      }
-    ],
-    "tags": []
-  },
-  {
-    "id": "yone",
-    "tk": "yone",
-    "letter": "y",
-    "en": "bary",
-    "fa": null,
-    "fa_status": "missing",
-    "senses": [
-      {
-        "en": "bary",
         "fa": null
       }
     ],

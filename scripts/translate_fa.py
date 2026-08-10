@@ -17,6 +17,7 @@ OUT_PATH = CANON / "entries.json"
 CACHE_PATH = CANON / "fa_cache.json"
 
 GLOSS_OVERRIDES = {
+    "yellowest": "کاملاً زرد",
     "intact": "سالم، دست‌نخورده",
     "intactness": "سالم‌بودن، تمامیت",
     "reputation": "شهرت، آبرو",
@@ -33,6 +34,10 @@ GLOSS_OVERRIDES = {
     "weight": "وزن",
     "discussion, debate": "بحث، مناظره",
 }
+
+# These overrides have been manually verified and should not be presented as
+# machine-translation drafts in the public dictionary.
+REVIEWED_GLOSS_OVERRIDES = {"yellowest"}
 
 # OCR damage in the original bilingual source occasionally leaves a Turkmen
 # gloss (or a clipped grammar example) where an English gloss should be. These
@@ -247,8 +252,12 @@ def write_entries(entries: list[dict], cache: dict[str, str]) -> dict:
     for e in entries:
         sense_fas: list[str] = []
         new_senses = []
+        entry_is_reviewed = True
         for sense in e.get("senses") or [{"en": e["en"], "fa": None}]:
             fa = ENTRY_FALLBACKS.get(e["tk"]) or resolve_fa(sense["en"], cache)
+            gloss_key = clean_en_for_mt(sense["en"]) or sense["en"]
+            if gloss_key not in REVIEWED_GLOSS_OVERRIDES:
+                entry_is_reviewed = False
             if not fa:
                 missing_fa += 1
             new_senses.append({"en": sense["en"], "fa": fa})
@@ -256,7 +265,7 @@ def write_entries(entries: list[dict], cache: dict[str, str]) -> dict:
                 sense_fas.append(fa)
         e["senses"] = new_senses
         e["fa"] = "؛ ".join(sense_fas) if sense_fas else None
-        e["fa_status"] = "mt_draft" if e["fa"] else "missing"
+        e["fa_status"] = "reviewed" if e["fa"] and entry_is_reviewed else "mt_draft" if e["fa"] else "missing"
 
     OUT_PATH.write_text(json.dumps(entries, ensure_ascii=False, indent=2), encoding="utf-8")
     stats = {

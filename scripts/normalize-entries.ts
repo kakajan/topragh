@@ -295,6 +295,44 @@ function cleanTok(w: string): string {
   return w.toLowerCase().replace(/[^a-zäöüýÿçşžňñ]/g, "");
 }
 
+/**
+ * The source's reverse English→Turkmen index contains regular superlatives
+ * such as `yellowest → sap sary`. The compact word list has their base form,
+ * so recognize `-est` inflections without treating any ASCII word as English.
+ */
+function englishSuperlativeStems(word: string): string[] {
+  const w = cleanTok(word);
+  if (!w.endsWith("est") || w.length < 5) return [];
+
+  const stems = new Set<string>();
+  // yellowest → yellow, happiest → happy
+  stems.add(w.slice(0, -3));
+  if (w.endsWith("iest")) stems.add(`${w.slice(0, -4)}y`);
+  // reddest → red
+  const bare = w.slice(0, -3);
+  if (bare.length >= 2 && bare.at(-1) === bare.at(-2)) stems.add(bare.slice(0, -1));
+  // whitest → white, latest → late
+  stems.add(w.slice(0, -2));
+
+  return [...stems].filter(Boolean);
+}
+
+function isEnglishToken(word: string, includeExtraHeadwords = false): boolean {
+  const w = cleanTok(word);
+  if (!w) return false;
+  if (
+    ENG_WORDS.has(w) ||
+    ENG_GLOSS_WORDS.has(w) ||
+    (includeExtraHeadwords && EXTRA_ENGLISH_HEADWORDS.has(w))
+  ) {
+    return true;
+  }
+  if (ENG_MORPH.test(w)) return true;
+  return englishSuperlativeStems(w).some(
+    (stem) => ENG_WORDS.has(stem) || (includeExtraHeadwords && EXTRA_ENGLISH_HEADWORDS.has(stem)),
+  );
+}
+
 function hasTkSuffix(w: string, strongOnly = false): boolean {
   const wl = cleanTok(w);
   const list = strongOnly ? TK_SUFFIXES_STRONG : TK_SUFFIXES;
@@ -335,8 +373,7 @@ function isTurkmenLemma(w: string): boolean {
   if (!wl || wl.length < 2) return false;
   if (hasSpecial(w)) return true;
   if (hasTkSuffix(wl, true)) return true;
-  if (ENG_MORPH.test(wl)) return false;
-  if (ENG_WORDS.has(wl) || ENG_GLOSS_WORDS.has(wl) || ENG_FUNC.has(wl)) return false;
+  if (isEnglishToken(wl) || ENG_FUNC.has(wl)) return false;
   // Weak suffix only when not an English lexicon hit (bitaraplyk via -lyk is strong)
   if (hasTkSuffix(wl, false)) return true;
   return false;
@@ -371,7 +408,7 @@ function looksLikeEnglishGloss(d: string): boolean {
 
   const words = asciiWords(t);
   if (!words.length) return false;
-  const engHits = words.filter((w) => ENG_GLOSS_WORDS.has(w) || ENG_WORDS.has(w));
+  const engHits = words.filter((w) => isEnglishToken(w) || ENG_FUNC.has(w));
 
   if (hasSpecial(t)) {
     // Mixed OCR lines like "täzeliknewspaper" — need several EN hits to call it a gloss
@@ -394,8 +431,7 @@ function looksLikeEnglishGloss(d: string): boolean {
 function isLikelyTkGlossToken(tok: string): boolean {
   const wl = cleanTok(peelGluedEnglish(tok));
   if (!wl || wl.length < 2) return false;
-  if (ENG_WORDS.has(wl) || ENG_GLOSS_WORDS.has(wl) || ENG_FUNC.has(wl)) return false;
-  if (ENG_MORPH.test(wl)) return false;
+  if (isEnglishToken(wl) || ENG_FUNC.has(wl)) return false;
   if (isTurkmenLemma(wl) || hasSpecial(tok)) return true;
   // Unknown Latin glosses that are not English lexicon (kitap, kesgitleme, …).
   return wl.length >= 2 && wl.length <= 12;
@@ -415,13 +451,7 @@ function headLooksEnglish(w: string): boolean {
   }
 
   // English lexicon/morphology wins over TK-suffix collisions (popular/similar end in -lar).
-  if (
-    tokens.some(
-      (t) => ENG_WORDS.has(t) || EXTRA_ENGLISH_HEADWORDS.has(t) || ENG_MORPH.test(t),
-    )
-  ) {
-    return true;
-  }
+  if (tokens.some((token) => isEnglishToken(token, true))) return true;
   if (tokens.length >= 2 && tokens.some((t) => ENG_FUNC.has(t))) return true;
 
   // Remaining ASCII with clear TK morphology → keep as Turkmen headword
@@ -430,6 +460,24 @@ function headLooksEnglish(w: string): boolean {
   // Multi-word / hyphenated Latin phrases (feel chilly, fellow traveller, business-trip)
   if (tokens.length >= 2 && tokens.every((t) => /^[a-z']+$/.test(t))) return true;
   return false;
+}
+
+/**
+ * Some Turkmen emphatic adjectives are all ASCII compounds (sap sary,
+ * ap-ak, gyp-gyzyl) and their English gloss is a regular superlative. Keep
+ * these when the final EN↔EN-junk pass runs; otherwise that pass mistakes the
+ * Turkmen compound for an English phrase and deletes the valid entry.
+ */
+function isAsciiTurkmenSuperlativeRecord(tk: string, en: string): boolean {
+  const headTokens = tk.toLowerCase().match(/[a-zA-Z']+/g) ?? [];
+  if (headTokens.length < 2 || headTokens.every(isEnglishToken)) return false;
+
+  const glossTokens = asciiWords(stripSensePrefix(en));
+  return (
+    glossTokens.length === 1 &&
+    isEnglishToken(glossTokens[0]!) &&
+    englishSuperlativeStems(glossTokens[0]!).length > 0
+  );
 }
 
 function defLooksTurkmen(d: string): boolean {
@@ -505,6 +553,10 @@ function isEssayJunk(w: string, d: string): boolean {
 
 /** Split glued OCR like "täzeliknewspaper" → "täzelik". */
 function peelGluedEnglish(token: string): string {
+  // Do not split a complete English word merely because it ends in another
+  // word: `yellowest` used to become `yello` after stripping `west`.
+  if (isEnglishToken(token)) return token;
+
   const lower = token.toLowerCase();
   for (const en of ENG_WORDS) {
     if (en.length < 4) continue;
@@ -545,7 +597,7 @@ function extractTkLemmas(def: string): string[] {
       .map(peelGluedEnglish)
       .filter((t) => {
         const wl = cleanTok(t);
-        return wl && !ENG_WORDS.has(wl) && !ENG_GLOSS_WORDS.has(wl) && !ENG_FUNC.has(wl);
+        return wl && !isEnglishToken(wl) && !ENG_FUNC.has(wl);
       });
     if (!rawToks.length) continue;
     const candidate = rawToks.join(" ").trim();
@@ -846,7 +898,12 @@ function normalize(): { entries: Entry[]; stats: Record<string, unknown> } {
   for (const [key, acc] of [...byKey.entries()]) {
     if (!isStrongEnglishPollution(acc.tk, acc.en)) {
       // Drop EN↔EN junk (e.g. acquaintance → "2. to be")
-      if (headLooksEnglish(acc.tk) && looksLikeEnglishGloss(acc.en) && !defLooksTurkmen(acc.en)) {
+      if (
+        headLooksEnglish(acc.tk) &&
+        looksLikeEnglishGloss(acc.en) &&
+        !defLooksTurkmen(acc.en) &&
+        !isAsciiTurkmenSuperlativeRecord(acc.tk, acc.en)
+      ) {
         byKey.delete(key);
         filtered.english_headword++;
       }
